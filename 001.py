@@ -47,12 +47,12 @@ class Solution2:
     def twoSum(cls, nums: List[int], target: int) -> List[int]:
         table = dict()
         for i, num in enumerate(nums):
-            if target - num in table :
+            if target - num in table:
                 return [table[target - num], i]
-            dict[nums[i]] = i
+            table[nums[i]] = i
         return []
 
 
 # print(Solution1.twoSum(nums=[2, 7, 11, 15], target=9))
 # print(Solution1.twoSum(nums=[2, 5, 5, 11], target=10))
-print(Solution1.twoSum(nums=[3, 2, 4], target=6))
+print(Solution2.twoSum(nums=[3, 2, 4], target=6))
