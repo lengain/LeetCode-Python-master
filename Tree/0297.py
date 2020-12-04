@@ -29,32 +29,60 @@ class TreeNode:
 
 class Codec:
 
-    def serialize(self, root:TreeNode) -> str:
+    def serialize(self, root: TreeNode) -> str:
         """Encodes a tree to a single string.
-
         :type root: TreeNode
         :rtype: str
         """
         self.desc = '['
+        allNodes = [root]
+        hasNode = True
+        while allNodes and hasNode:
+            has = False
+            allCount = len(allNodes)
+            for i in range(0, allCount):
+                item = allNodes[i]
+                if isinstance(item, TreeNode):
+                    self.desc += str(item.val)
+                    if item.left:
+                        allNodes.append(item.left)
+                        has = True
+                    else:
+                        allNodes.append(None)
+                    if item.right:
+                        allNodes.append(item.right)
+                        has = True
+                    else:
+                        allNodes.append(None)
+                else:
+                    self.desc += 'null'
+                self.desc += ','
+            if not has:
+                descCount = len(self.desc) - 1
+                self.desc = self.desc[0:descCount]
+            hasNode = has
+            allNodes = allNodes[allCount:]
 
-        def traverse(node: TreeNode):
-            if not node:
-                return
-            self.desc += str(node.val)
-            self.desc += ','
-            traverse(node.left)
-            traverse(node.right)
-
-        traverse(root)
         self.desc += ']'
         return self.desc
 
     def deserialize(self, data):
         """Decodes your encoded data to tree.
-
         :type data: str
         :rtype: TreeNode
         """
+        if not data:
+            return None
+        length = len(data)
+        str = data[1:length - 1]
+        valList = data.split(",")
+        node = TreeNode()
+        valCount = len(valList)
+        lineCount = 1
+        lineTotalCount = 1
+        for i in range(0, valCount):
+            if i < lineTotalCount:
+
 
 
 """
@@ -80,4 +108,4 @@ root = TreeNode(val=5,
                                               )
                                )
                 )
-print(Codec().serialize(root))
+print(Codec().deserialize(Codec().serialize(root)))
