@@ -29,7 +29,7 @@ class TreeNode:
 
 class Codec:
 
-    def serialize(self, root):
+    def serialize(self, root:TreeNode) -> str:
         """Encodes a tree to a single string.
 
         :type root: TreeNode
@@ -38,8 +38,10 @@ class Codec:
         self.desc = '['
 
         def traverse(node: TreeNode):
+            if not node:
+                return
             self.desc += str(node.val)
-            self.desc += ","
+            self.desc += ','
             traverse(node.left)
             traverse(node.right)
 
@@ -78,4 +80,4 @@ root = TreeNode(val=5,
                                               )
                                )
                 )
-print(Codec.serialize(root))
+print(Codec().serialize(root))
