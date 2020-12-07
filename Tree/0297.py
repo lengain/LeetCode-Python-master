@@ -29,7 +29,7 @@ class TreeNode:
 
 class Codec:
 
-    def serialize(self, root: TreeNode) -> str:
+    def serialize1(self, root: TreeNode) -> str:
         """Encodes a tree to a single string.
         :type root: TreeNode
         :rtype: str
@@ -66,23 +66,60 @@ class Codec:
         self.desc += ']'
         return self.desc
 
+    def serialize(self, root: TreeNode) -> str:
+        """Encodes a tree to a single string.
+        :type root: TreeNode
+        :rtype: str
+        """
+        if not root:
+            return '[]'
+
+        def innerSerialize(node: TreeNode, dec: str) -> str:
+            if not node:
+                dec += "null,"
+            else:
+                dec += str(node.val) + ","
+                dec = innerSerialize(node.left, dec)
+                dec = innerSerialize(node.right, dec)
+            return dec
+
+        dec = innerSerialize(node=root, dec="[")
+        decLength = len(dec)
+        dec = dec[0: decLength - 1]
+        dec += "]"
+        return dec
+
     def deserialize(self, data):
         """Decodes your encoded data to tree.
         :type data: str
         :rtype: TreeNode
         """
-        if not data:
+        dataLength = len(data)
+        dec = data[1:dataLength - 1]
+        if len(dec) == 0:
             return None
-        length = len(data)
-        str = data[1:length - 1]
-        valList = data.split(",")
-        node = TreeNode()
-        valCount = len(valList)
-        lineCount = 1
-        lineTotalCount = 1
-        for i in range(0, valCount):
-            if i < lineTotalCount:
+        valList: list[str] = dec.split(",")
 
+        def deser(node: TreeNode):
+            node.val = valList[0]
+            del (valList[0])
+            if not valList:
+                return
+            if valList[0] != 'null':
+                node.left = TreeNode()
+                deser(node.left)
+            else:
+                del (valList[0])
+
+            if valList[0] != 'null':
+                node.right = TreeNode()
+                deser(node.right)
+            else:
+                del (valList[0])
+
+        node = TreeNode()
+        deser(node=node)
+        return node
 
 
 """
@@ -108,4 +145,6 @@ root = TreeNode(val=5,
                                               )
                                )
                 )
-print(Codec().deserialize(Codec().serialize(root)))
+# print(Codec().serialize(root))
+print(Codec().deserialize(Codec().serialize(None)))
+# print(Codec().deserialize(Codec().serialize(root)))
